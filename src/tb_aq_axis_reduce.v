@@ -1,6 +1,6 @@
 /*
  * Copyright (C)2006-2019 AQUAXIS TECHNOLOGY.
- *  Don't remove this header. 
+ *  Don't remove this header.
  * When you use this source, there is a need to inherit this header.
  *
  * License: MIT License
@@ -76,8 +76,9 @@ module tb_aq_axis_reduce;
   initial begin
     // Initialize Inputs
     RST_N = 0;
-    CLK = 0;
+    CLK   = 0;
     #100;
+    RST_N = 1;
   end
 
 
@@ -177,6 +178,37 @@ module tb_aq_axis_reduce;
     .AXI_RREADY(S_AXI_RREADY)
   );
 
+  task_axism u_task_asism(
+    .RST_N        ( RST_N         ),
+    .CLK          ( CLK           ),
+
+    .AXIS_TCLK    ( S_AXIS_TCLK   ),
+    .AXIS_TDATA   ( S_AXIS_TDATA  ),
+    .AXIS_TKEEP   ( S_AXIS_TKEEP  ),
+    .AXIS_TLAST   ( S_AXIS_TLAST  ),
+    .AXIS_TREADY  ( S_AXIS_TREADY ),
+    .AXIS_TSTRB   ( S_AXIS_TSTRB  ),
+    .AXIS_TVALID  ( S_AXIS_TVALID )
+  );
+
+  initial begin
+    #0
+    wait(RST_N);
+
+    @(posedge CLK);
+
+    u_task_axilm.write(32'h0000_0000, 32'd640);
+
+    u_task_axilm.read(32'h0000_0000);
+
+    u_task_asism.save(10'd0, 32'hA0A0A0A0);
+    u_task_asism.save(10'd1, 32'hA0A0A0A0);
+    u_task_asism.save(10'd2, 32'hA0A0A0A0);
+    u_task_asism.save(10'd3, 32'hA0A0A0A0);
+
+    u_task_asism.stream(10'd4);
+  end
+
 /*
   initial begin
     // Initialize Inputs
@@ -196,7 +228,7 @@ module tb_aq_axis_reduce;
 
     // Wait 100 ns for global reset to finish
     #100;
-        
+
     RST_N = 1;
     // Add stimulus here
 
@@ -380,9 +412,8 @@ module tb_aq_axis_reduce;
     @(posedge CLK);
 
     repeat (40) @(posedge CLK);
-    
+
     $finish();
   end
 */
 endmodule
-

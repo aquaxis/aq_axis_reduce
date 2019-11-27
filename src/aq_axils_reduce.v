@@ -212,8 +212,8 @@ module aq_axils_reduce
             begin
               reg_cnv_y[15:0] <= local_wdata[15:0];
             end
-          default: 
-            begin 
+          default:
+            begin
             end
         endcase
       end
@@ -238,6 +238,8 @@ module aq_axils_reduce
       end
     end
   end
+
+  assign local_rdata[31:0] = reg_rdata[31:0];
 
   assign ORG_X[15:0] = reg_org_x[15:0];
   assign ORG_Y[15:0] = reg_org_y[15:0];

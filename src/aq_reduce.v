@@ -1,6 +1,6 @@
 /*
  * Copyright (C)2006-2019 AQUAXIS TECHNOLOGY.
- *  Don't remove this header. 
+ *  Don't remove this header.
  * When you use this source, there is a need to inherit this header.
  *
  * License: MIT License
@@ -30,7 +30,7 @@ module aq_reduce(
 
 // Pre Buffer
 reg [15:0]  pre_org_x, pre_org_y, pre_cnv_x, pre_cnv_y;
-reg         pre_din_we, pre_din_fsync, pre_din_start_x, pre_din_start_y;
+reg         pre_din_we, pre_din_fsync;
 reg [31:0]  pre_din;
 always @( posedge CLK or negedge RST_N ) begin
   if( !RST_N ) begin
@@ -246,7 +246,7 @@ end
 
 // Stage 4-11
 wire [7:0]  st11_da, st11_dr, st11_dg, st11_db;
-reg [4:0]  st4_st, st5_st, st6_st, st7_st, st8_st, st9_st, st10_st, st11_st; 
+reg [4:0]  st4_st, st5_st, st6_st, st7_st, st8_st, st9_st, st10_st, st11_st;
 reg [1:0]   st4_fs, st5_fs, st6_fs, st7_fs, st8_fs, st9_fs, st10_fs, st11_fs;
 reg [15:0]  st4_y_ma, st5_y_ma, st6_y_ma, st7_y_ma, st8_y_ma, st9_y_ma, st10_y_ma, st11_y_ma;
 reg [15:0]  st4_y_mb, st5_y_mb, st6_y_mb, st7_y_mb, st8_y_mb, st9_y_mb, st10_y_mb, st11_y_mb;
@@ -393,7 +393,7 @@ aq_ram25x16 u_aq_ram25x16_ya(
   .WEA    ( st13_we     ),
   .ADDRA  ( addra       ),
   .DINA   ( st13_da_bi  ),
-  
+
   .CLKB   ( CLK         ),
   .ADDRB  ( addrb       ),
   .DOUTB  ( st13_da_b   )
@@ -403,7 +403,7 @@ aq_ram25x16 u_aq_ram25x16_yr(
   .WEA    ( st13_we     ),
   .ADDRA  ( addra       ),
   .DINA   ( st13_dr_bi  ),
-  
+
   .CLKB   ( CLK         ),
   .ADDRB  ( addrb       ),
   .DOUTB  ( st13_dr_b   )
@@ -413,7 +413,7 @@ aq_ram25x16 u_aq_ram25x16_yg(
   .WEA    ( st13_we     ),
   .ADDRA  ( addra       ),
   .DINA   ( st13_dg_bi  ),
-  
+
   .CLKB   ( CLK         ),
   .ADDRB  ( addrb       ),
   .DOUTB  ( st13_dg_b   )
@@ -423,7 +423,7 @@ aq_ram25x16 u_aq_ram25x16_yb(
   .WEA    ( st13_we     ),
   .ADDRA  ( addra       ),
   .DINA   ( st13_db_bi  ),
-  
+
   .CLKB   ( CLK         ),
   .ADDRB  ( addrb       ),
   .DOUTB  ( st13_db_b   )
