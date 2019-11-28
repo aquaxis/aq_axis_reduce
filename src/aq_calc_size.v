@@ -27,8 +27,8 @@ module aq_calc_size(
 wire [15:0] next_ma, next_mb;
 reg [15:0]  reg_ma, reg_mb;
 
-assign next_ma[15:0] = (START || (reg_mb == 16'd0))?16'd0:ORG-reg_mb;
-assign next_mb[15:0] = (START || (reg_mb == 16'd0))?CNV:CNV-next_ma;
+assign next_ma[15:0] = (START || (reg_mb == 16'd0))?16'd0:(ORG-reg_mb>CNV)?CNV:ORG-reg_mb;
+assign next_mb[15:0] = (START || (reg_mb == 16'd0))?CNV:(ORG-reg_mb>CNV)?next_ma+reg_mb:CNV-next_ma;
 
 always @(posedge CLK or negedge RST_N) begin
   if(!RST_N) begin
@@ -44,6 +44,6 @@ end
 
 assign MA     = reg_ma;
 assign MB     = reg_mb;
-assign VALID  = (reg_ma > 16'd0)?1'b1:1'b0;
+assign VALID  = ((reg_ma > 16'd0) && (reg_mb <= CNV))?1'b1:1'b0;
 
 endmodule

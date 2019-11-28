@@ -435,7 +435,8 @@ always @( posedge CLK or negedge RST_N ) begin
   end else begin
     if( st10_st[1] ) begin
       addrb  <= 16'd0;
-    end else if( st10_st[3] ) begin
+//    end else if( st10_st[3] ) begin
+    end else begin
       addrb <= addrb + 16'd1;
     end
   end
@@ -487,7 +488,8 @@ always @( posedge CLK or negedge RST_N ) begin
     end
     if( st12_st[1] ) begin
       addra  <= 16'd0;
-    end else if( st12_st[3] ) begin
+//    end else if( st12_st[3] ) begin
+    end else begin
       addra <= addra + 16'd1;
     end
   end

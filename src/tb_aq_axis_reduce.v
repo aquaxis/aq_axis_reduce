@@ -211,19 +211,19 @@ module tb_aq_axis_reduce;
       u_task_axism.save(10'd1+i*64,  32'hFFFFFFFF);
       u_task_axism.save(10'd2+i*64,  32'hFFFFFFFF);
       u_task_axism.save(10'd3+i*64,  32'hFFFFFFFF);
-      u_task_axism.save(10'd4+i*64,  32'hFFFFFFFF);
-      u_task_axism.save(10'd5+i*64,  32'hFFFFFFFF);
-      u_task_axism.save(10'd6+i*64,  32'hFFFFFFFF);
-      u_task_axism.save(10'd7+i*64,  32'hFFFFFFFF);
+      u_task_axism.save(10'd4+i*64,  32'hFFFFFF00);
+      u_task_axism.save(10'd5+i*64,  32'hFFFFFF00);
+      u_task_axism.save(10'd6+i*64,  32'hFFFFFF00);
+      u_task_axism.save(10'd7+i*64,  32'hFFFFFF00);
       // Yellow
       u_task_axism.save(10'd8+i*64,  32'hFFFFFF00);
       u_task_axism.save(10'd9+i*64,  32'hFFFFFF00);
       u_task_axism.save(10'd10+i*64, 32'hFFFFFF00);
       u_task_axism.save(10'd11+i*64, 32'hFFFFFF00);
-      u_task_axism.save(10'd12+i*64, 32'hFFFFFF00);
-      u_task_axism.save(10'd13+i*64, 32'hFFFFFF00);
-      u_task_axism.save(10'd14+i*64, 32'hFFFFFF00);
-      u_task_axism.save(10'd15+i*64, 32'hFFFFFF00);
+      u_task_axism.save(10'd12+i*64, 32'hFFFFFFFF);
+      u_task_axism.save(10'd13+i*64, 32'hFFFFFFFF);
+      u_task_axism.save(10'd14+i*64, 32'hFFFFFFFF);
+      u_task_axism.save(10'd15+i*64, 32'hFFFFFFFF);
       // Cyan
       u_task_axism.save(10'd16+i*64, 32'hFF00FFFF);
       u_task_axism.save(10'd17+i*64, 32'hFF00FFFF);
@@ -282,6 +282,10 @@ module tb_aq_axis_reduce;
 
     @(posedge CLK);
 
+    $display("Execute 4/3");
+
+    @(posedge CLK);
+
     u_task_axilm.write(32'h0000_0000, 32'd64);
     u_task_axilm.write(32'h0000_0004, 32'd64);
     u_task_axilm.write(32'h0000_0008, 32'd48);
@@ -304,213 +308,43 @@ module tb_aq_axis_reduce;
 
     @(posedge CLK);
 
-  end
-
-/*
-  initial begin
-    // Initialize Inputs
-    RST_N = 0;
-    CLK = 0;
-    ORG_X = 0;
-    ORG_Y = 0;
-    CNV_X = 0;
-    CNV_Y = 0;
-    DIN_WE = 0;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 0;
-    DIN_R = 0;
-    DIN_G = 0;
-    DIN_B = 0;
-
-    // Wait 100 ns for global reset to finish
-    #100;
-
-    RST_N = 1;
-    // Add stimulus here
+    wait(M_AXIS_TLAST);
 
     @(posedge CLK);
 
-    ORG_X = 4;
-    ORG_Y = 4;
-    CNV_X = 3;
-    CNV_Y = 3;
-
-    // 0,0
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 1;
-    DIN_START_Y = 1;
-    DIN_A = 'hF0;
-    DIN_R = 'hE0;
-    DIN_G = 'hD0;
-    DIN_B = 'hC0;
-
-    // 1,0
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 1;
-    DIN_A = 'hE0;
-    DIN_R = 'hD0;
-    DIN_G = 'hC0;
-    DIN_B = 'hB0;
-
-    // 2,0
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 1;
-    DIN_A = 'hD0;
-    DIN_R = 'hC0;
-    DIN_G = 'hB0;
-    DIN_B = 'hA0;
-
-    // 3,0
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 1;
-    DIN_A = 'hC0;
-    DIN_R = 'hB0;
-    DIN_G = 'hA0;
-    DIN_B = 'h90;
-
-    // 0,1
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 1;
-    DIN_START_Y = 0;
-    DIN_A = 'hB0;
-    DIN_R = 'hA0;
-    DIN_G = 'h90;
-    DIN_B = 'h80;
-
-    // 1,1
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 'hA0;
-    DIN_R = 'h90;
-    DIN_G = 'h80;
-    DIN_B = 'h70;
-
-    // 2,1
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 'h90;
-    DIN_R = 'h80;
-    DIN_G = 'h70;
-    DIN_B = 'h60;
-
-    // 3,1
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 'h80;
-    DIN_R = 'h70;
-    DIN_G = 'h60;
-    DIN_B = 'h50;
-
-    // 0,0
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 1;
-    DIN_START_Y = 0;
-    DIN_A = 'hF0;
-    DIN_R = 'hE0;
-    DIN_G = 'hD0;
-    DIN_B = 'hC0;
-
-    // 1,0
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 'hE0;
-    DIN_R = 'hD0;
-    DIN_G = 'hC0;
-    DIN_B = 'hB0;
-
-    // 2,0
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 'hD0;
-    DIN_R = 'hC0;
-    DIN_G = 'hB0;
-    DIN_B = 'hA0;
-
-    // 3,0
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 'hC0;
-    DIN_R = 'hB0;
-    DIN_G = 'hA0;
-    DIN_B = 'h90;
-
-    // 0,1
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 1;
-    DIN_START_Y = 0;
-    DIN_A = 'hB0;
-    DIN_R = 'hA0;
-    DIN_G = 'h90;
-    DIN_B = 'h80;
-
-    // 1,1
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 'hA0;
-    DIN_R = 'h90;
-    DIN_G = 'h80;
-    DIN_B = 'h70;
-
-    // 2,1
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 'h90;
-    DIN_R = 'h80;
-    DIN_G = 'h70;
-    DIN_B = 'h60;
-
-    // 3,1
-    @(posedge CLK);
-    DIN_WE = 1;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 'h80;
-    DIN_R = 'h70;
-    DIN_G = 'h60;
-    DIN_B = 'h50;
-
-    // fin
-    @(posedge CLK);
-    DIN_WE = 0;
-    DIN_START_X = 0;
-    DIN_START_Y = 0;
-    DIN_A = 0;
-    DIN_R = 0;
-    DIN_G = 0;
-    DIN_B = 0;
+    $display("Execute 8/5");
 
     @(posedge CLK);
 
-    repeat (40) @(posedge CLK);
+    u_task_axilm.write(32'h0000_0000, 32'd64);
+    u_task_axilm.write(32'h0000_0004, 32'd64);
+    u_task_axilm.write(32'h0000_0008, 32'd40);
+    u_task_axilm.write(32'h0000_000C, 32'd40);
+
+    u_task_axilm.read(32'h0000_0000);
+    u_task_axilm.read(32'h0000_0004);
+    u_task_axilm.read(32'h0000_0008);
+    u_task_axilm.read(32'h0000_000C);
+
+    @(posedge CLK);
+    FSYNC_IN = 1;
+
+    @(posedge CLK);
+    FSYNC_IN = 0;
+
+    @(posedge CLK);
+
+    u_task_axism.stream(16'd4096);
+
+    @(posedge CLK);
+
+    wait(M_AXIS_TLAST);
+
+    @(posedge CLK);
+
+
 
     $finish();
   end
-*/
+
 endmodule
