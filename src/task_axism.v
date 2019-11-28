@@ -20,10 +20,10 @@ initial begin
   AXIS_TVALID = 0;
 end
 
-reg [31:0]  ram[0:1023];
+reg [31:0]  ram[0:65535];
 
 task save;
-  input [9:0] ADDR;
+  input [15:0] ADDR;
   input [31:0] WDATA;
   begin
     ram[ADDR] <= WDATA;
@@ -31,9 +31,10 @@ task save;
 endtask
 
 task stream;
-  input [9:0] WORD;
+  input [15:0] WORD;
   integer i;
   begin
+    $display("AXI Stream Start(%d)", WORD);
     wait(AXIS_TREADY);
     @(posedge CLK);
 
@@ -53,6 +54,7 @@ task stream;
     AXIS_TLAST  <= 0;
     AXIS_TSTRB  <= 0;
     AXIS_TVALID <= 0;
+    $display("AXI Stream Finish");
   end
 endtask
 

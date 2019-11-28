@@ -106,10 +106,10 @@ reg [1:0]     st1_fs;
 
 wire          x_start, y_start;
 assign x_start = ((buf_cnt_x == 16'd0) && buf_din_we)?1'b1:1'b0;
-assign y_start = ((buf_cnt_x == 16'd0) && (buf_cnt_y == 16'd0) && buf_din_we)?1'b1:1'b0;
+assign y_start = ((buf_cnt_y == 16'd0) && buf_din_we)?1'b1:1'b0;
 
 wire          w_last;
-assign w_last = ((buf_cnt_x == (buf_cnv_x - 16'd1)) && (buf_cnt_y == (buf_cnv_y - 16'd1)) && buf_din_we)?1'b1:1'b0;
+assign w_last = ((buf_cnt_x == (buf_org_x - 16'd1)) && (buf_cnt_y == (buf_org_y - 16'd1)) && buf_din_we)?1'b1:1'b0;
 
 aq_calc_size u_aq_calc_size_x(
   .RST_N  ( RST_N       ),
@@ -215,6 +215,7 @@ always @( posedge CLK or negedge RST_N ) begin
     st3_y_mb  <= st2_y_mb;
     if( st2_st[0] ) begin
       if( st2_st[1] ) begin
+        // STARTは初期演算値を代入する
         st3_da    <= {1'b0, st2_da};
         st3_da_b  <= {1'b0, st2_da_b};
         st3_dr    <= {1'b0, st2_dr};
@@ -246,37 +247,37 @@ end
 
 // Stage 4-11
 wire [7:0]  st11_da, st11_dr, st11_dg, st11_db;
-reg [4:0]  st4_st, st5_st, st6_st, st7_st, st8_st, st9_st, st10_st, st11_st;
+reg [4:0]   st4_st, st5_st, st6_st, st7_st, st8_st, st9_st, st10_st, st11_st;
 reg [1:0]   st4_fs, st5_fs, st6_fs, st7_fs, st8_fs, st9_fs, st10_fs, st11_fs;
 reg [15:0]  st4_y_ma, st5_y_ma, st6_y_ma, st7_y_ma, st8_y_ma, st9_y_ma, st10_y_ma, st11_y_ma;
 reg [15:0]  st4_y_mb, st5_y_mb, st6_y_mb, st7_y_mb, st8_y_mb, st9_y_mb, st10_y_mb, st11_y_mb;
-aq_div25x16 u_aq_div25x16_xa (
-  .RST_N  ( RST_N    ),
-  .CLK  ( CLK    ),
-  .DINA  ( st3_da  ),
-  .DINB  ( buf_org_x  ),
-  .DOUT  ( st11_da  )
+aq_div24x16 u_aq_div24x16_xa (
+  .RST_N  ( RST_N     ),
+  .CLK    ( CLK       ),
+  .DINA   ( st3_da    ),
+  .DINB   ( buf_org_x ),
+  .DOUT   ( st11_da   )
 );
-aq_div25x16 u_aq_div25x16_xr (
-  .RST_N  ( RST_N    ),
-  .CLK  ( CLK    ),
-  .DINA  ( st3_dr  ),
-  .DINB  ( buf_org_x  ),
-  .DOUT  ( st11_dr  )
+aq_div24x16 u_aq_div24x16_xr (
+  .RST_N  ( RST_N     ),
+  .CLK    ( CLK       ),
+  .DINA   ( st3_dr    ),
+  .DINB   ( buf_org_x ),
+  .DOUT   ( st11_dr   )
 );
-aq_div25x16 u_aq_div25x16_xg (
-  .RST_N  ( RST_N    ),
-  .CLK  ( CLK    ),
-  .DINA  ( st3_dg  ),
-  .DINB  ( buf_org_x  ),
-  .DOUT  ( st11_dg  )
+aq_div24x16 u_aq_div24x16_xg (
+  .RST_N  ( RST_N     ),
+  .CLK    ( CLK       ),
+  .DINA   ( st3_dg    ),
+  .DINB   ( buf_org_x ),
+  .DOUT   ( st11_dg   )
 );
-aq_div25x16 u_aq_div25x16_xb (
-  .RST_N  ( RST_N    ),
-  .CLK  ( CLK    ),
-  .DINA  ( st3_db  ),
-  .DINB  ( buf_org_x  ),
-  .DOUT  ( st11_db  )
+aq_div24x16 u_aq_div24x16_xb (
+  .RST_N  ( RST_N     ),
+  .CLK    ( CLK       ),
+  .DINA   ( st3_db    ),
+  .DINB   ( buf_org_x ),
+  .DOUT   ( st11_db   )
 );
 always @( posedge CLK or negedge RST_N ) begin
   if ( !RST_N ) begin
@@ -432,9 +433,9 @@ always @( posedge CLK or negedge RST_N ) begin
   if( !RST_N ) begin
     addrb  <= 16'd0;
   end else begin
-    if( st12_st[1] ) begin
+    if( st10_st[1] ) begin
       addrb  <= 16'd0;
-    end else if( st12_st[3] ) begin
+    end else if( st10_st[3] ) begin
       addrb <= addrb + 16'd1;
     end
   end
@@ -457,6 +458,7 @@ always @( posedge CLK or negedge RST_N ) begin
     st13_fs    <= st12_fs;
     if( st12_st[3] ) begin
       if( st12_st[2] ) begin
+        // STAR時は初期演算値を代入する
         st13_da     <= st12_da;
         st13_da_bi  <= st12_da_b;
         st13_dr     <= st12_dr;
@@ -495,28 +497,28 @@ end
 wire [7:0]  st21_da, st21_dr, st21_dg, st21_db;
 reg [4:0]  st14_st, st15_st, st16_st, st17_st, st18_st, st19_st, st20_st, st21_st;
 reg [1:0]  st14_fs, st15_fs, st16_fs, st17_fs, st18_fs, st19_fs, st20_fs, st21_fs;
-aq_div25x16 u_aq_div25x16_ya (
+aq_div24x16 u_aq_div24x16_ya (
   .RST_N  ( RST_N     ),
   .CLK    ( CLK       ),
   .DINA   ( st13_da   ),
   .DINB   ( buf_org_y ),
   .DOUT   ( st21_da   )
 );
-aq_div25x16 u_aq_div25x16_yr (
+aq_div24x16 u_aq_div24x16_yr (
   .RST_N  ( RST_N     ),
   .CLK    ( CLK       ),
   .DINA   ( st13_dr   ),
   .DINB   ( buf_org_y ),
   .DOUT   ( st21_dr   )
 );
-aq_div25x16 u_aq_div25x16_yg (
+aq_div24x16 u_aq_div24x16_yg (
   .RST_N  ( RST_N     ),
   .CLK    ( CLK       ),
   .DINA   ( st13_dg   ),
   .DINB   ( buf_org_y ),
   .DOUT   ( st21_dg   )
 );
-aq_div25x16 u_aq_div25x16_yb (
+aq_div24x16 u_aq_div24x16_yb (
   .RST_N  ( RST_N     ),
   .CLK    ( CLK       ),
   .DINA   ( st13_db   ),
